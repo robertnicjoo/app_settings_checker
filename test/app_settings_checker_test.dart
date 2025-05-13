@@ -7,13 +7,13 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 class MockAppSettingsCheckerPlatform
     with MockPlatformInterfaceMixin
     implements AppSettingsCheckerPlatform {
-
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
 }
 
 void main() {
-  final AppSettingsCheckerPlatform initialPlatform = AppSettingsCheckerPlatform.instance;
+  final AppSettingsCheckerPlatform initialPlatform =
+      AppSettingsCheckerPlatform.instance;
 
   test('$MethodChannelAppSettingsChecker is the default instance', () {
     expect(initialPlatform, isInstanceOf<MethodChannelAppSettingsChecker>());
@@ -21,7 +21,8 @@ void main() {
 
   test('getPlatformVersion', () async {
     AppSettingsChecker appSettingsCheckerPlugin = AppSettingsChecker();
-    MockAppSettingsCheckerPlatform fakePlatform = MockAppSettingsCheckerPlatform();
+    MockAppSettingsCheckerPlatform fakePlatform =
+        MockAppSettingsCheckerPlatform();
     AppSettingsCheckerPlatform.instance = fakePlatform;
 
     expect(await appSettingsCheckerPlugin.getPlatformVersion(), '42');

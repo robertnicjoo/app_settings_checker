@@ -8,7 +8,8 @@ abstract class AppSettingsCheckerPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  static AppSettingsCheckerPlatform _instance = MethodChannelAppSettingsChecker();
+  static AppSettingsCheckerPlatform _instance =
+      MethodChannelAppSettingsChecker();
 
   /// The default instance of [AppSettingsCheckerPlatform] to use.
   ///

@@ -18,10 +18,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "App Settings Checker",
-      home: HomePage(),
-    );
+    return MaterialApp(title: "App Settings Checker", home: HomePage());
   }
 }
 
@@ -49,7 +46,8 @@ class _HomePageState extends State<HomePage> {
     // We also handle the message potentially returning null.
     try {
       platformVersion =
-          await _batteryOptimizationCheckerPlugin.getPlatformVersion() ?? 'Unknown platform version';
+          await _batteryOptimizationCheckerPlugin.getPlatformVersion() ??
+          'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }
@@ -69,23 +67,26 @@ class _HomePageState extends State<HomePage> {
     if (!isDisabled) {
       showDialog(
         context: context,
-        builder: (_) => AlertDialog(
-          title: Text('Battery Optimization'),
-          content: Text('To ensure background tasks work reliably, please disable battery optimization for this app.'),
-          actions: [
-            TextButton(
-              child: Text('Cancel'),
-              onPressed: () => Navigator.pop(context),
+        builder:
+            (_) => AlertDialog(
+              title: Text('Battery Optimization'),
+              content: Text(
+                'To ensure background tasks work reliably, please disable battery optimization for this app.',
+              ),
+              actions: [
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                TextButton(
+                  child: Text('Open Settings'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    AppSettingsChecker.openBatteryOptimizationSettings();
+                  },
+                ),
+              ],
             ),
-            TextButton(
-              child: Text('Open Settings'),
-              onPressed: () {
-                Navigator.pop(context);
-                AppSettingsChecker.openBatteryOptimizationSettings();
-              },
-            ),
-          ],
-        ),
       );
     }
   }
@@ -96,20 +97,26 @@ class _HomePageState extends State<HomePage> {
     if (!isEnabled) {
       showDialog(
         context: context,
-        builder: (_) => AlertDialog(
-          title: Text("Location Disabled"),
-          content: Text("Please enable location services for best experience."),
-          actions: [
-            TextButton(onPressed: () => Navigator.pop(context), child: Text("Cancel")),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                AppSettingsChecker.openLocationSettings();
-              },
-              child: Text("Open Settings"),
-            )
-          ],
-        ),
+        builder:
+            (_) => AlertDialog(
+              title: Text("Location Disabled"),
+              content: Text(
+                "Please enable location services for best experience.",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    AppSettingsChecker.openLocationSettings();
+                  },
+                  child: Text("Open Settings"),
+                ),
+              ],
+            ),
       );
     }
   }
@@ -119,23 +126,26 @@ class _HomePageState extends State<HomePage> {
     if (!areEnabled) {
       showDialog(
         context: context,
-        builder: (_) => AlertDialog(
-          title: const Text("Notifications Disabled"),
-          content: const Text("To receive important updates, please enable notifications."),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel"),
+        builder:
+            (_) => AlertDialog(
+              title: const Text("Notifications Disabled"),
+              content: const Text(
+                "To receive important updates, please enable notifications.",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    AppSettingsChecker.openNotificationSettings();
+                  },
+                  child: const Text("Open Settings"),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-                AppSettingsChecker.openNotificationSettings();
-              },
-              child: const Text("Open Settings"),
-            ),
-          ],
-        ),
       );
     }
   }
@@ -143,17 +153,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('App Settings Checker Plugin'),
-      ),
+      appBar: AppBar(title: const Text('App Settings Checker Plugin')),
       body: Column(
         spacing: 10,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           ElevatedButton(
-              onPressed: () => checkBatteryOptimization(context),
-              child: Text('Battery Optimization')
+            onPressed: () => checkBatteryOptimization(context),
+            child: Text('Battery Optimization'),
           ),
           ElevatedButton(
             onPressed: () => checkNotificationsAndPrompt(context),
@@ -167,9 +175,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () => AppSettingsChecker.openAppSettings(),
             child: Text('App Settings'),
           ),
-          Center(
-            child: Text('Running on: $_platformVersion'),
-          ),
+          Center(child: Text('Running on: $_platformVersion')),
           FutureBuilder(
             future: AppSettingsChecker.getAppVersion(),
             builder: (context, snapshot) {
@@ -193,4 +199,3 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
-

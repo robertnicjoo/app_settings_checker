@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'app_settings_checker_platform_interface.dart';
 import 'package:flutter/services.dart';
@@ -7,7 +6,9 @@ class AppSettingsChecker {
   static const MethodChannel _channel = MethodChannel('app_settings_checker');
 
   static Future<bool> isBatteryOptimizationDisabled() async {
-    final bool result = await _channel.invokeMethod('isBatteryOptimizationDisabled');
+    final bool result = await _channel.invokeMethod(
+      'isBatteryOptimizationDisabled',
+    );
     return result;
   }
 
