@@ -3,7 +3,7 @@ description: "A Flutter plugin for check permissions and opening settings from a
 version: 1.0.0
 homepage: https://github.com/robertnicjoo/app_settings_checker
 repository: https://github.com/robertnicjoo/app_settings_checker
-issue_tracker: hhttps://github.com/robertnicjoo/app_settings_checker/issues
+issue_tracker: https://github.com/robertnicjoo/app_settings_checker/issues
 
 environment:
   sdk: ^3.7.2
