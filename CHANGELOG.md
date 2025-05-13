@@ -10,3 +10,6 @@
     - Access settings.
     - Phone model retrieval.
     - Device ID retrieval.
+
+## [1.0.1] - 2025-05-13
+  - Added API Documentation

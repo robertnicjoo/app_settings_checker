@@ -1,6 +1,6 @@
 name: app_settings_checker
 description: "A Flutter plugin for check permissions and opening settings from an app. By PT. Nicxon International Solutions"
-version: 1.0.0
+version: 1.0.1
 homepage: https://github.com/robertnicjoo/app_settings_checker
 repository: https://github.com/robertnicjoo/app_settings_checker
 issue_tracker: https://github.com/robertnicjoo/app_settings_checker/issues
