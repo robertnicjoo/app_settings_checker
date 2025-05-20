@@ -18,7 +18,15 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(title: "App Settings Checker", home: HomePage());
+    return MaterialApp(
+      theme: ThemeData(
+        colorSchemeSeed: Colors.red,
+        scaffoldBackgroundColor: Colors.blueGrey.shade50,
+        appBarTheme: AppBarTheme(backgroundColor: Colors.blueGrey.shade50),
+      ),
+      title: "App Settings Checker",
+      home: HomePage(),
+    );
   }
 }
 
@@ -31,7 +39,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _platformVersion = 'Unknown';
-  final _batteryOptimizationCheckerPlugin = AppSettingsChecker();
 
   @override
   void initState() {
@@ -46,7 +53,7 @@ class _HomePageState extends State<HomePage> {
     // We also handle the message potentially returning null.
     try {
       platformVersion =
-          await _batteryOptimizationCheckerPlugin.getPlatformVersion() ??
+          await AppSettingsChecker.getPlatformVersion() ??
           'Unknown platform version';
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
@@ -64,7 +71,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> checkBatteryOptimization(BuildContext context) async {
     final isDisabled = await AppSettingsChecker.isBatteryOptimizationDisabled();
-    if (!isDisabled) {
+    if (context.mounted && !isDisabled) {
       showDialog(
         context: context,
         builder:
@@ -93,8 +100,7 @@ class _HomePageState extends State<HomePage> {
 
   void checkLocationAndPrompt(BuildContext context) async {
     final isEnabled = await AppSettingsChecker.isLocationEnabled();
-    print('isEnabled $isEnabled');
-    if (!isEnabled) {
+    if (context.mounted && !isEnabled) {
       showDialog(
         context: context,
         builder:
@@ -119,11 +125,34 @@ class _HomePageState extends State<HomePage> {
             ),
       );
     }
+    if (context.mounted && isEnabled) {
+      showDialog(
+        context: context,
+        builder:
+            (_) => AlertDialog(
+              title: Text("Location Enabled"),
+              content: Text("Location is already enabled."),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text("Cancel"),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                    AppSettingsChecker.openLocationSettings();
+                  },
+                  child: Text("Open Settings"),
+                ),
+              ],
+            ),
+      );
+    }
   }
 
   void checkNotificationsAndPrompt(BuildContext context) async {
     final areEnabled = await AppSettingsChecker.areNotificationsEnabled();
-    if (!areEnabled) {
+    if (context.mounted && !areEnabled) {
       showDialog(
         context: context,
         builder:
@@ -154,47 +183,106 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('App Settings Checker Plugin')),
-      body: Column(
-        spacing: 10,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-            onPressed: () => checkBatteryOptimization(context),
-            child: Text('Battery Optimization'),
+      body: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 300,
+          ), // max width for all buttons
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment:
+                CrossAxisAlignment.stretch, // makes buttons fill width
+            children: [
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => checkBatteryOptimization(context),
+                child: const Text('Battery Optimization'),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => checkNotificationsAndPrompt(context),
+                child: const Text('Notifications'),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => checkLocationAndPrompt(context),
+                child: const Text('Location'),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => AppSettingsChecker.openAppSettings(),
+                child: const Text('App Settings'),
+              ),
+              const SizedBox(height: 20),
+              Text.rich(
+                TextSpan(
+                  text: 'Running on: ',
+                  children: [
+                    TextSpan(
+                      text: _platformVersion,
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+                textAlign: TextAlign.start,
+              ),
+              const SizedBox(height: 10),
+              FutureBuilder(
+                future: AppSettingsChecker.getAppVersion(),
+                builder: (context, snapshot) {
+                  return Text.rich(
+                    TextSpan(
+                      text: 'App Version: ',
+                      children: [
+                        TextSpan(
+                          text: snapshot.data ?? "Unknown",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.start,
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
+              FutureBuilder(
+                future: AppSettingsChecker.getPhoneModel(),
+                builder: (context, snapshot) {
+                  return Text.rich(
+                    TextSpan(
+                      text: 'Phone Model: ',
+                      children: [
+                        TextSpan(
+                          text: snapshot.data ?? "Unknown",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.start,
+                  );
+                },
+              ),
+              const SizedBox(height: 10),
+              FutureBuilder(
+                future: AppSettingsChecker.getDeviceId(),
+                builder: (context, snapshot) {
+                  return Text.rich(
+                    TextSpan(
+                      text: 'Device ID: ',
+                      children: [
+                        TextSpan(
+                          text: snapshot.data ?? "Unknown",
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.start,
+                  );
+                },
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () => checkNotificationsAndPrompt(context),
-            child: Text('Notifications'),
-          ),
-          ElevatedButton(
-            onPressed: () => checkLocationAndPrompt(context),
-            child: Text('Location'),
-          ),
-          ElevatedButton(
-            onPressed: () => AppSettingsChecker.openAppSettings(),
-            child: Text('App Settings'),
-          ),
-          Center(child: Text('Running on: $_platformVersion')),
-          FutureBuilder(
-            future: AppSettingsChecker.getAppVersion(),
-            builder: (context, snapshot) {
-              return Text('App Version: ${snapshot.data ?? "Unknown"}');
-            },
-          ),
-          FutureBuilder(
-            future: AppSettingsChecker.getPhoneModel(),
-            builder: (context, snapshot) {
-              return Text('Phone Model: ${snapshot.data ?? "Unknown"}');
-            },
-          ),
-          FutureBuilder(
-            future: AppSettingsChecker.getDeviceId(),
-            builder: (context, snapshot) {
-              return Text('Decive ID: ${snapshot.data ?? "Unknown"}');
-            },
-          ),
-        ],
+        ),
       ),
     );
   }

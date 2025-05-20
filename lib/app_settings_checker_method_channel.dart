@@ -4,7 +4,6 @@ import 'app_settings_checker_platform_interface.dart';
 
 /// An implementation of [AppSettingsCheckerPlatform] that uses method channels.
 class MethodChannelAppSettingsChecker extends AppSettingsCheckerPlatform {
-
   /// The method channel used to interact with the native platform.
   /// This channel is used to call native methods from the platform-specific implementations (e.g., Android, iOS).
   @visibleForTesting
@@ -16,7 +15,9 @@ class MethodChannelAppSettingsChecker extends AppSettingsCheckerPlatform {
   Future<String?> getPlatformVersion() async {
     try {
       // Invoke the native method to get the platform version
-      final version = await methodChannel.invokeMethod<String>('getPlatformVersion');
+      final version = await methodChannel.invokeMethod<String>(
+        'getPlatformVersion',
+      );
       return version;
     } on PlatformException catch (e) {
       // Handle any platform exception if the method fails

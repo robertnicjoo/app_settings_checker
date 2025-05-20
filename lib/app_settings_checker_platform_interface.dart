@@ -3,7 +3,6 @@ import 'app_settings_checker_method_channel.dart';
 
 /// Abstract class representing the platform interface for the AppSettingsChecker plugin.
 abstract class AppSettingsCheckerPlatform extends PlatformInterface {
-
   /// Constructs a [AppSettingsCheckerPlatform].
   AppSettingsCheckerPlatform() : super(token: _token);
 
@@ -11,7 +10,8 @@ abstract class AppSettingsCheckerPlatform extends PlatformInterface {
   static final Object _token = Object();
 
   // The default instance of [AppSettingsCheckerPlatform]. Initially set to the MethodChannel implementation.
-  static AppSettingsCheckerPlatform _instance = MethodChannelAppSettingsChecker();
+  static AppSettingsCheckerPlatform _instance =
+      MethodChannelAppSettingsChecker();
 
   /// The default instance of [AppSettingsCheckerPlatform] to use.
   ///
@@ -23,7 +23,10 @@ abstract class AppSettingsCheckerPlatform extends PlatformInterface {
   ///
   /// This is typically called during plugin registration to bind platform-specific logic.
   static set instance(AppSettingsCheckerPlatform instance) {
-    PlatformInterface.verifyToken(instance, _token);  // Verifies that the instance is using the correct token.
+    PlatformInterface.verifyToken(
+      instance,
+      _token,
+    ); // Verifies that the instance is using the correct token.
     _instance = instance;
   }
 

@@ -11,5 +11,6 @@
     - Phone model retrieval.
     - Device ID retrieval.
 
-## [1.0.1] - 2025-05-13
-  - Added API Documentation
+## [1.0.1] - 2025-05-20
+- Updated example code
+- Added ios support

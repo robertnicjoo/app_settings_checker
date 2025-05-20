@@ -25,6 +25,6 @@ void main() {
         MockAppSettingsCheckerPlatform();
     AppSettingsCheckerPlatform.instance = fakePlatform;
 
-    expect(await appSettingsCheckerPlugin.getPlatformVersion(), '42');
+    expect(await AppSettingsChecker.getPlatformVersion(), '42');
   });
 }
