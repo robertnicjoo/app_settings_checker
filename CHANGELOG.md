@@ -1,14 +1,17 @@
 # Changelog
 
 
-## [1.0.2] - 2025-05-20
+## [1.0.3]
+- Improvement of API documents
+
+## [1.0.2]
 - Updated example code
 - Added ios support
 
-## [1.0.1] - 2025-05-13
+## [1.0.1]
 - Added API Documentation
 
-## [1.0.0] - 2025-05-13
+## [1.0.0]
 - Initial release of the package with the following features:
     - Battery optimization status check.
     - Open battery optimization settings.
