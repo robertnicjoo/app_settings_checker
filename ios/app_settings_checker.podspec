@@ -4,7 +4,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'app_settings_checker'
-  s.version          = '1.0.1'
+  s.version          = '1.0.2'
   s.summary          = 'A Flutter plugin for check permissions and opening settings from an app.'
   s.description      = <<-DESC
 A Flutter plugin for check permissions and opening settings from an app. By PT. Nicxon International Solutions
