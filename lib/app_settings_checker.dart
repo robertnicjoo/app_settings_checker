@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'platform_stub.dart'
-  if (dart.library.io) 'platform_io.dart'
-  if (dart.library.html) 'platform_web.dart';
+    if (dart.library.io) 'platform_io.dart'
+    if (dart.library.html) 'platform_web.dart';
 import 'package:flutter/services.dart';
 
 import 'app_settings_checker_platform_interface.dart';
@@ -45,7 +45,6 @@ BatteryOptimizationStatus parseBatteryOptimizationStatus(String? value) {
       return BatteryOptimizationStatus.unknown;
   }
 }
-
 
 /// A utility class to check and manage various app-related settings
 /// on the device using platform channels.
