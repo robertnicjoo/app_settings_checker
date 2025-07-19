@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:app_settings_checker/app_settings_checker.dart';
 import 'package:app_settings_checker/app_settings_checker_platform_interface.dart';
@@ -9,6 +10,13 @@ class MockAppSettingsCheckerPlatform
     implements AppSettingsCheckerPlatform {
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
+
+  @override
+  Future<bool> isBatteryOptimizationDisabled() => Future.value(false);
+
+  @override
+  Future<BatteryOptimizationStatus> getBatteryOptimizationStatus() =>
+      Future.value(BatteryOptimizationStatus.optimized);
 }
 
 void main() {
@@ -20,7 +28,7 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    AppSettingsChecker appSettingsCheckerPlugin = AppSettingsChecker();
+    AppSettingsChecker _ = AppSettingsChecker();
     MockAppSettingsCheckerPlatform fakePlatform =
         MockAppSettingsCheckerPlatform();
     AppSettingsCheckerPlatform.instance = fakePlatform;

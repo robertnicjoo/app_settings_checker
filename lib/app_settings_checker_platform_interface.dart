@@ -1,4 +1,5 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
+import 'app_settings_checker.dart';
 import 'app_settings_checker_method_channel.dart';
 
 /// Abstract class representing the platform interface for the AppSettingsChecker plugin.
@@ -36,4 +37,22 @@ abstract class AppSettingsCheckerPlatform extends PlatformInterface {
     // This method should be implemented by platform-specific code.
     throw UnimplementedError('getPlatformVersion() has not been implemented.');
   }
+
+  /// Checks whether battery optimization is disabled for the app.
+  ///
+  /// Returns `true` if the app is excluded from battery optimization (e.g., the system is ignoring optimizations),
+  /// and `false` if the app is still subject to Doze mode and other battery-saving behaviors.
+  ///
+  /// Only meaningful on Android 6.0+ (API level 23+). Other platforms should return `false` or handle appropriately.
+  Future<bool> isBatteryOptimizationDisabled();
+
+  /// Retrieves the current battery optimization status for the app (Android only).
+  ///
+  /// Returns a [BatteryOptimizationStatus] enum value representing whether the app is:
+  /// - [BatteryOptimizationStatus.notOptimized]: Excluded from battery optimizations (user has whitelisted the app).
+  /// - [BatteryOptimizationStatus.optimized]: Subject to battery optimizations (default behavior).
+  /// - [BatteryOptimizationStatus.unknown]: Status could not be determined (e.g., API level < 23 or unsupported platform).
+  ///
+  /// This provides a more descriptive and type-safe alternative to [isBatteryOptimizationDisabled].
+  Future<BatteryOptimizationStatus> getBatteryOptimizationStatus();
 }

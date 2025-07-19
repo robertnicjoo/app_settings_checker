@@ -76,6 +76,27 @@ class AppSettingsCheckerPlugin : FlutterPlugin, MethodCallHandler, ActivityAware
         result.success(null)
       }
 
+      "getBatteryOptimizationStatus" -> {
+        val ctx = context
+        if (ctx == null) {
+          result.error("NO_CONTEXT", "Context is null", null)
+          return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+          val powerManager = ctx.getSystemService(Context.POWER_SERVICE) as PowerManager
+          val isIgnoring = powerManager.isIgnoringBatteryOptimizations(ctx.packageName)
+
+          if (isIgnoring) {
+            result.success("not_optimized") // excluded from battery optimization
+          } else {
+            result.success("optimized") // subject to battery optimization
+          }
+        } else {
+          result.success("unknown")
+        }
+      }
+
       "areNotificationsEnabled" -> {
         val ctx = context
         if (ctx == null) {
@@ -122,10 +143,14 @@ class AppSettingsCheckerPlugin : FlutterPlugin, MethodCallHandler, ActivityAware
           return
         }
 
-        val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+          data = Uri.fromParts("package", act.packageName, null)
+        }
+
         act.startActivity(intent)
         result.success(null)
       }
+
 
       "openAppSettings" -> {
         val act = activity

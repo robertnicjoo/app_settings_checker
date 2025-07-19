@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.0.4]
+- Added new `BatteryOptimizationStatus` enum for safer, clearer status handling.
+- Introduced `getBatteryOptimizationStatus()` method for detailed status.
+- Improved documentation comments across platform interfaces and methods.
+- Updated README with usage examples and enum-based status handling.
 
 ## [1.0.3]
 - Improvement of API documents

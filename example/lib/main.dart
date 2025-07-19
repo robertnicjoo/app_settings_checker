@@ -179,6 +179,47 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void showBatteryOptimizationStatus(BuildContext context) async {
+    final status = await AppSettingsChecker.getBatteryOptimizationStatus();
+
+    if (!context.mounted) return;
+
+    String message;
+    switch (status) {
+      case BatteryOptimizationStatus.notOptimized:
+        message = 'Battery optimization is turned off for this app.';
+        break;
+      case BatteryOptimizationStatus.optimized:
+        message = 'Battery optimization is ON for this app.';
+        break;
+      case BatteryOptimizationStatus.unknown:
+        message = 'Could not determine the battery optimization status.';
+        break;
+    }
+
+    showDialog(
+      context: context,
+      builder:
+          (_) => AlertDialog(
+            title: const Text('Battery Optimization Status'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('OK'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  AppSettingsChecker.openBatteryOptimizationSettings();
+                },
+                child: const Text('Open Settings'),
+              ),
+            ],
+          ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -197,6 +238,11 @@ class _HomePageState extends State<HomePage> {
               ElevatedButton(
                 onPressed: () => checkBatteryOptimization(context),
                 child: const Text('Battery Optimization'),
+              ),
+              const SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () => showBatteryOptimizationStatus(context),
+                child: const Text('Battery Optimization Status'),
               ),
               const SizedBox(height: 10),
               ElevatedButton(

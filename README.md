@@ -15,6 +15,7 @@ By **PT. Nicxon International Solutions**
     - [Open App Settings](#open-app-settings)
     - [Location Settings](#location-settings)
     - [Notification Settings](#notification-settings)
+    - [Battery Optimization Status](#battery-optimization-status)
     - [Battery Optimization Settings](#battery-optimization-settings)
     - [App Info & Device Details](#app-info--device-details)
 
@@ -128,6 +129,34 @@ AppSettingsChecker.openNotificationSettings();
 
 ---
 
+### Battery Optimization Status
+
+Check a more descriptive status using the BatteryOptimizationStatus enum:
+
+```dart
+final status = await AppSettingsChecker.getBatteryOptimizationStatus();
+
+switch (status) {
+  case BatteryOptimizationStatus.optimized:
+    print('Battery optimization is ON for this app.');
+    break;
+  case BatteryOptimizationStatus.notOptimized:
+    print('Battery optimization is OFF (whitelisted).');
+    break;
+  case BatteryOptimizationStatus.unknown:
+    print('Battery optimization status unknown.');
+    break;
+}
+```
+
+No need to compare strings — you get type-safe values:
+
+- `BatteryOptimizationStatus.optimized`
+- `BatteryOptimizationStatus.notOptimized`
+- `BatteryOptimizationStatus.unknown`
+
+---
+
 ### Battery Optimization Settings
 
 Check if battery optimization is disabled (Android only, not applicable on iOS):
@@ -167,7 +196,7 @@ final deviceId = await AppSettingsChecker.getDeviceId();
 Get Platform Version
 
 ```agsl
-await AppSettingsChecker.getPlatformVersion();
+final platformVersion = await AppSettingsChecker.getPlatformVersion();
 ```
 
 ---

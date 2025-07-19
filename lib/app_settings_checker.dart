@@ -2,6 +2,48 @@ import 'dart:async';
 import 'dart:io';
 import 'package:flutter/services.dart';
 
+import 'app_settings_checker_platform_interface.dart';
+
+/// Represents the battery optimization status of the app on Android.
+///
+/// Used to indicate whether the app is currently affected by system-level
+/// battery-saving features like Doze mode.
+enum BatteryOptimizationStatus {
+  /// The app is subject to battery optimizations.
+  ///
+  /// This is the default state. The system may restrict background activities
+  /// such as alarms, jobs, and network access to conserve battery.
+  optimized,
+
+  /// The app is excluded from battery optimizations.
+  ///
+  /// The user has explicitly whitelisted the app, allowing it to bypass Doze mode
+  /// and continue background activity without restrictions.
+  notOptimized,
+
+  /// The optimization status could not be determined.
+  ///
+  /// This may occur on platforms that do not support battery optimizations (e.g., Android versions below 6.0)
+  /// or if an error occurs when querying the system.
+  unknown,
+}
+
+/// Parses a string returned from the native platform into a [BatteryOptimizationStatus] enum.
+///
+/// - `'optimized'` → [BatteryOptimizationStatus.optimized]
+/// - `'not_optimized'` → [BatteryOptimizationStatus.notOptimized]
+/// - Any other value → [BatteryOptimizationStatus.unknown]
+BatteryOptimizationStatus parseBatteryOptimizationStatus(String value) {
+  switch (value) {
+    case 'optimized':
+      return BatteryOptimizationStatus.optimized;
+    case 'not_optimized':
+      return BatteryOptimizationStatus.notOptimized;
+    default:
+      return BatteryOptimizationStatus.unknown;
+  }
+}
+
 /// A utility class to check and manage various app-related settings
 /// on the device using platform channels.
 class AppSettingsChecker {
@@ -12,16 +54,24 @@ class AppSettingsChecker {
   /// Returns `true` if disabled, `false` otherwise.
   static Future<bool> isBatteryOptimizationDisabled() async {
     if (!Platform.isAndroid) return false;
-    final bool result = await _channel.invokeMethod(
-      'isBatteryOptimizationDisabled',
-    );
-    return result;
+
+    return AppSettingsCheckerPlatform.instance.isBatteryOptimizationDisabled();
   }
 
   /// Opens the battery optimization settings screen (Android only).
   static Future<void> openBatteryOptimizationSettings() async {
     if (!Platform.isAndroid) return;
     await _channel.invokeMethod('openBatteryOptimizationSettings');
+  }
+
+  /// Retrieves the current battery optimization status for the app (Android only).
+  ///
+  /// Returns one of:
+  /// - [BatteryOptimizationStatus.optimized]
+  /// - [BatteryOptimizationStatus.notOptimized]
+  /// - [BatteryOptimizationStatus.unknown]
+  static Future<BatteryOptimizationStatus> getBatteryOptimizationStatus() {
+    return AppSettingsCheckerPlatform.instance.getBatteryOptimizationStatus();
   }
 
   /// Checks if location services are enabled on the device.
