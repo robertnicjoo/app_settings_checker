@@ -1,5 +1,7 @@
 import 'dart:async';
-import 'dart:io';
+import 'platform_stub.dart'
+  if (dart.library.io) 'platform_io.dart'
+  if (dart.library.html) 'platform_web.dart';
 import 'package:flutter/services.dart';
 
 import 'app_settings_checker_platform_interface.dart';
@@ -33,8 +35,8 @@ enum BatteryOptimizationStatus {
 /// - `'optimized'` → [BatteryOptimizationStatus.optimized]
 /// - `'not_optimized'` → [BatteryOptimizationStatus.notOptimized]
 /// - Any other value → [BatteryOptimizationStatus.unknown]
-BatteryOptimizationStatus parseBatteryOptimizationStatus(String value) {
-  switch (value) {
+BatteryOptimizationStatus parseBatteryOptimizationStatus(String? value) {
+  switch (value?.toLowerCase()) {
     case 'optimized':
       return BatteryOptimizationStatus.optimized;
     case 'not_optimized':
@@ -43,6 +45,7 @@ BatteryOptimizationStatus parseBatteryOptimizationStatus(String value) {
       return BatteryOptimizationStatus.unknown;
   }
 }
+
 
 /// A utility class to check and manage various app-related settings
 /// on the device using platform channels.
@@ -53,14 +56,14 @@ class AppSettingsChecker {
   /// Checks if battery optimization is disabled for the app (Android only).
   /// Returns `true` if disabled, `false` otherwise.
   static Future<bool> isBatteryOptimizationDisabled() async {
-    if (!Platform.isAndroid) return false;
+    if (!isAndroid) return false;
 
     return AppSettingsCheckerPlatform.instance.isBatteryOptimizationDisabled();
   }
 
   /// Opens the battery optimization settings screen (Android only).
   static Future<void> openBatteryOptimizationSettings() async {
-    if (!Platform.isAndroid) return;
+    if (!isAndroid) return;
     await _channel.invokeMethod('openBatteryOptimizationSettings');
   }
 
@@ -89,7 +92,7 @@ class AppSettingsChecker {
   /// Checks if notifications are enabled for the app.
   /// On iOS, always returns `true` unless explicitly disabled by the user.
   static Future<bool> areNotificationsEnabled() async {
-    if (!Platform.isAndroid) {
+    if (!isAndroid) {
       // iOS always allows unless user disables explicitly in settings
       return true;
     }
@@ -99,7 +102,7 @@ class AppSettingsChecker {
 
   /// Opens the notification settings screen for the app (Android only).
   static Future<void> openNotificationSettings() async {
-    if (!Platform.isAndroid) return;
+    if (!isAndroid) return;
     await _channel.invokeMethod('openNotificationSettings');
   }
 
